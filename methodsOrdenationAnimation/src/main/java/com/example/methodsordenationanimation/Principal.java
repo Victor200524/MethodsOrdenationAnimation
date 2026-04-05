@@ -2,10 +2,10 @@ package com.example.methodsordenationanimation;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -22,30 +22,82 @@ public class Principal extends Application {
 
     // Arrays para o depurador de código
     private Label[] linhasCodigoUI;
+    private ScrollPane scrollCodigo;
     private final String[] codigoFonte = {
-            "0. public void bucketSort(int[] vet) {",
-            "1.     List<List<Integer>> buckets = new ArrayList<>();",
-            "2.     for (int i = 0; i < 10; i++) buckets.add(new ArrayList<>());",
-            "3. ",
-            "4.     // Espalhar os numeros em seus baldes",
-            "5.     for (int i = 0; i < vet.length; i++) {",
-            "6.         int indexBalde = vet[i] / 10;",
-            "7.         buckets.get(indexBalde).add(vet[i]);",
-            "8.     }",
-            "9. ",
-            "10.    // Ordenar internamente nos baldes",
-            "11.    for (int i = 0; i < 10; i++) {",
-            "12.        Collections.sort(buckets.get(i));",
-            "13.    }",
+            "0.  private void executarLogicaBucketSort() throws Exception {",
+            "1.      Thread.sleep(500);",
+            "2. ",
+            "3.      List<List<Button>> bucketsDados = new ArrayList<>();",
+            "4.      for (int i = 0; i < 10; i++) {",
+            "5.          bucketsDados.add(new ArrayList<>());",
+            "6.      }",
+            "7. ",
+            "8.      // Distribuir nos baldes os elementos do vetor",
+            "9.      for (int i = 0; i < qtdeElem; i++) {",
+            "10.         Button btn = vet[i];",
+            "11.         int valor = Integer.parseInt(btn.getText());",
+            "12.         int indexBalde = valor / 10;",
+            "13.         bucketsDados.get(indexBalde).add(btn);",
             "14. ",
-            "15.    // Volta os numeros para o vetor ordenado",
-            "16.    int k = 0;",
-            "17.    for (int i = 0; i < 10; i++) {",
-            "18.        for (int j = 0; j < buckets.get(i).size(); j++) {",
-            "19.            vet[k++] = buckets.get(i).get(j);",
-            "20.        }",
-            "21.    }",
-            "22. }"
+            "15.         Platform.runLater(() -> {",
+            "16.             btn.setStyle(\"-fx-base: #e67e22; -fx-text-fill: white;\");",
+            "17.             btn.toFront();",
+            "18.         });",
+            "19. ",
+            "20.         // Faz os calculos para mover em X,Y os elementos",
+            "21.         double destinoX = 20 + (indexBalde * 75) + 8;",
+            "22.         int qtdNoBalde = bucketsDados.get(indexBalde).size() - 1;",
+            "23.         double destinoY = 330 + (qtdNoBalde * 45);",
+            "24. ",
+            "25.         moverBotao(btn, destinoX, destinoY);",
+            "26.         Thread.sleep(300);",
+            "27.     }",
+            "28. ",
+            "29.     Thread.sleep(800);",
+            "30. ",
+            "31.     // Ordeno cada balde, ate que todos estejam ordenados",
+            "32.     for (int i = 0; i < 10; i++) {",
+            "33.         List<Button> balde = bucketsDados.get(i);",
+            "34. ",
+            "35.         if(balde.size() > 1) {",
+            "36.             balde.sort((b1, b2) -> {",
+            "37.                 int v1 = Integer.parseInt(b1.getText());",
+            "38.                 int v2 = Integer.parseInt(b2.getText());",
+            "39.                 return Integer.compare(v1, v2);",
+            "40.             });",
+            "41. ",
+            "42.             for (int j = 0; j < balde.size(); j++) {",
+            "43.                 Button btn = balde.get(j);",
+            "44.                 double novoY = 330 + (j * 45);",
+            "45.                 moverBotao(btn, btn.getLayoutX(), novoY);",
+            "46.             }",
+            "47.             Thread.sleep(500);",
+            "48.         }",
+            "49.     }",
+            "50. ",
+            "51.     Thread.sleep(800);",
+            "52. ",
+            "53.     // Aqui faco o gather (coleta de volta os numeros)",
+            "54.     int indexAtualVetor = 0;",
+            "55. ",
+            "56.     for (int i = 0; i < 10; i++) {",
+            "57.         for (Button btn : bucketsDados.get(i)) {",
+            "58.             double destinoX = 20 + (indexAtualVetor * 65);",
+            "59.             double destinoY = 100;",
+            "60. ",
+            "61.             Platform.runLater(() -> btn.setStyle(\"-fx-base: #2ecc71; -fx-text-fill: white;\"));",
+            "62. ",
+            "63.             moverBotao(btn, destinoX, destinoY);",
+            "64. ",
+            "65.             vet[indexAtualVetor] = btn;",
+            "66.             indexAtualVetor++;",
+            "67. ",
+            "68.             Thread.sleep(250);",
+            "69.         }",
+            "70.     }",
+            "71. ",
+            "72.     Platform.runLater(() -> botao_inicio.setDisable(false));",
+            "73. }"
     };
 
     @Override
@@ -99,9 +151,7 @@ public class Principal extends Application {
 
         //Montagem do Painel de Código, famoso debug
         VBox painelCodigo = new VBox(2);
-        painelCodigo.setLayoutX(1200);
-        painelCodigo.setLayoutY(50);
-        painelCodigo.setStyle("-fx-background-color: #2c3e50; -fx-padding: 15; -fx-background-radius: 5;");
+        painelCodigo.setStyle("-fx-background-color: #2c3e50; -fx-padding: 15;");
 
         linhasCodigoUI = new Label[codigoFonte.length];
         for (int i = 0; i < codigoFonte.length; i++) {
@@ -113,7 +163,21 @@ public class Principal extends Application {
 
             painelCodigo.getChildren().add(linhasCodigoUI[i]);
         }
-        pane.getChildren().add(painelCodigo);
+
+        // Aqui cria a barra de rolagem
+        scrollCodigo = new ScrollPane();
+        scrollCodigo.setContent(painelCodigo);
+        scrollCodigo.setLayoutX(1200);
+        scrollCodigo.setLayoutY(20);
+        scrollCodigo.setPrefSize(580, 980);
+
+        // Remove as bordas feias padrão do ScrollPane e deixa fundo escuro
+        scrollCodigo.setStyle("-fx-background: #2c3e50; -fx-border-color: #2c3e50;");
+        scrollCodigo.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Tira a rolagem horizontal
+        scrollCodigo.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS); // Força a rolagem vertical
+
+        // Adiciona o scrollPane no painel principal em vez do VBox
+        pane.getChildren().add(scrollCodigo);
 
         Scene scene = new Scene(pane, 1400, 600); // Tamanho da interface
         stage.setScene(scene);
@@ -135,88 +199,90 @@ public class Principal extends Application {
 
     // Função para a animação do bucket sort
     private void executarLogicaBucketSort() throws Exception {
-        destacarLinhaCodigo(1);
+        destacarLinhaCodigo(0);
         Thread.sleep(500);
-        destacarLinhaCodigo(2);
 
+        destacarLinhaCodigo(3);
         List<List<Button>> bucketsDados = new ArrayList<>();
+
+        destacarLinhaCodigo(4);
         for (int i = 0; i < 10; i++) {
             bucketsDados.add(new ArrayList<>());
         }
 
         // Distribuir nos baldes os elementos do vetor
-        destacarLinhaCodigo(5);
         for (int i = 0; i < qtdeElem; i++) {
+            destacarLinhaCodigo(9);
             Button btn = vet[i];
             int valor = Integer.parseInt(btn.getText());
-
-            destacarLinhaCodigo(6);
             int indexBalde = valor / 10;
 
-            destacarLinhaCodigo(7);
+            destacarLinhaCodigo(13); // Adicionando o elemento ao balde correto
             bucketsDados.get(indexBalde).add(btn);
 
-            Platform.runLater(() -> {
-                btn.setStyle("-fx-base: #e67e22; -fx-text-fill: white;");
-                btn.toFront();
-            });
+            destacarLinhaCodigo(15);
 
-            // Faz os cálculos apra mover em X,Y os elementos em seus respctivos baldes
+            // Faz os cálculos para mover em X,Y os elementos em seus respectivos baldes
             double destinoX = 20 + (indexBalde * 75) + 8;
             int qtdNoBalde = bucketsDados.get(indexBalde).size() - 1;
             double destinoY = 330 + (qtdNoBalde * 45);
 
+            destacarLinhaCodigo(25); // Executando a animação de mover
             moverBotao(btn, destinoX, destinoY);
             Thread.sleep(300);
-            destacarLinhaCodigo(5);
         }
 
+        destacarLinhaCodigo(29); // Pausa dramática antes de ordenar
         Thread.sleep(800);
 
-        // Ordeno cada balde, ate que todos estejam ordenados
-        destacarLinhaCodigo(11);
+        // Ordena internamente cada balde
         for (int i = 0; i < 10; i++) {
+            destacarLinhaCodigo(32); // Passando por cada balde
             List<Button> balde = bucketsDados.get(i);
 
             if(balde.size() > 1) {
-                destacarLinhaCodigo(12);
+                destacarLinhaCodigo(36); // Lógica de ordenação
                 balde.sort((b1, b2) -> {
                     int v1 = Integer.parseInt(b1.getText());
                     int v2 = Integer.parseInt(b2.getText());
                     return Integer.compare(v1, v2);
                 });
 
+                destacarLinhaCodigo(42);
                 for (int j = 0; j < balde.size(); j++) {
                     Button btn = balde.get(j);
                     double novoY = 330 + (j * 45);
+
+                    destacarLinhaCodigo(45); // Movendo o botão na tela
                     moverBotao(btn, btn.getLayoutX(), novoY);
                 }
                 Thread.sleep(500);
             }
-            destacarLinhaCodigo(11);
         }
 
+        destacarLinhaCodigo(51);
         Thread.sleep(800);
 
-        // Aqui faço o gather, o qual, coleta de volta os números do vetor para o vetor ordenado
-        destacarLinhaCodigo(16);
+        // Coleta de volta os números do vetor
+        destacarLinhaCodigo(54);
         int indexAtualVetor = 0;
 
-        destacarLinhaCodigo(17);
         for (int i = 0; i < 10; i++) {
-
-            if (!bucketsDados.get(i).isEmpty())
-                destacarLinhaCodigo(18);
+            destacarLinhaCodigo(56); // For externo percorrendo os 10 baldes
 
             for (Button btn : bucketsDados.get(i)) {
-                destacarLinhaCodigo(19);
+                destacarLinhaCodigo(57); // For interno tirando do balde
+
                 double destinoX = 20 + (indexAtualVetor * 65);
                 double destinoY = 100;
 
+                destacarLinhaCodigo(61);
                 Platform.runLater(() -> btn.setStyle("-fx-base: #2ecc71; -fx-text-fill: white;"));
 
+                destacarLinhaCodigo(63); // Movendo de volta
                 moverBotao(btn, destinoX, destinoY);
 
+                destacarLinhaCodigo(65); // Atualizando o vetor
                 vet[indexAtualVetor] = btn;
                 indexAtualVetor++;
 
@@ -224,19 +290,28 @@ public class Principal extends Application {
             }
         }
 
-        destacarLinhaCodigo(-1);
+        destacarLinhaCodigo(72); // Fim da execução e liberação do botão
         Platform.runLater(() -> botao_inicio.setDisable(false));
+
+        // Remove a linha amarela após 1 segundo
+        Thread.sleep(1000);
+        destacarLinhaCodigo(-1);
     }
 
     // ------------ MÉTODOS AUXILIARES -----------------------
     private void destacarLinhaCodigo(int indice) {
         Platform.runLater(() -> {
             for (int i = 0; i < linhasCodigoUI.length; i++) {
-                if (i == indice)
+                if (i == indice) {
                     linhasCodigoUI[i].setStyle("-fx-background-color: #f1c40f; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-padding: 2 5 2 5;");
 
-                else
+                    // Calcula a posição percentual da linha atual
+                    double posicaoRolagem = (double) i / (linhasCodigoUI.length - 1);
+                    scrollCodigo.setVvalue(posicaoRolagem); // Move a barra de rolagem para aquela posição
+
+                } else {
                     linhasCodigoUI[i].setStyle("-fx-background-color: transparent; -fx-text-fill: #ecf0f1; -fx-padding: 2 5 2 5;");
+                }
             }
         });
     }
