@@ -229,7 +229,7 @@ public class Principal extends Application {
             double destinoX = 20 + (indexBalde * 75) + 8;
             double destinoY = 330 + (posicaoInsercao * 45);
 
-            destacarLinhaCodigo(25); // Executando a animação de mover
+            destacarLinhaCodigo(24); // Executando a animação de mover
             moverBotao(btn, destinoX, destinoY);
             Thread.sleep(300);
         }
@@ -288,13 +288,13 @@ public class Principal extends Application {
                 double destinoX = 20 + (indexAtualVetor * 65);
                 double destinoY = 100;
 
-                destacarLinhaCodigo(67);
+                destacarLinhaCodigo(68);
                 Platform.runLater(() -> btn.setStyle("-fx-base: #2ecc71; -fx-text-fill: white;"));
 
-                destacarLinhaCodigo(69);
+                destacarLinhaCodigo(70);
                 moverBotao(btn, destinoX, destinoY);
 
-                destacarLinhaCodigo(71);
+                destacarLinhaCodigo(72);
                 vet[indexAtualVetor] = btn;
                 indexAtualVetor++;
 
