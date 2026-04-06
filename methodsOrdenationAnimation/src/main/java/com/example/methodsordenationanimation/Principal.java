@@ -18,7 +18,6 @@ public class Principal extends Application {
     private Button[] vet;
     private static final int qtdeElem = 16;
 
-    // Arrays para o depurador de código
     private Label[] linhasCodigoUI;
     private ScrollPane scrollCodigo;
     private final String[] codigoFonte = {
