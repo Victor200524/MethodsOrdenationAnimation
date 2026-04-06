@@ -51,52 +51,59 @@ public class Principal extends Application {
             "27. ",
             "28.     Thread.sleep(800);",
             "29. ",
-            "30.     // Ordeno cada balde, ate que todos estejam ordenados",
+            "30.     // Ordena cada balde manualmente",
             "31.     for (int i = 0; i < 10; i++) {",
             "32.         int tamanhoBalde = qtdNoBalde[i];",
             "33. ",
             "34.         if(tamanhoBalde > 1) {",
-            "35.             java.util.Arrays.sort(bucketsDados[i], 0, tamanhoBalde, (b1, b2) -> {",
-            "36.                 int v1 = Integer.parseInt(b1.getText());",
-            "37.                 int v2 = Integer.parseInt(b2.getText());",
-            "38.                 return Integer.compare(v1, v2);",
-            "39.             });",
-            "40. ",
-            "41.             for (int j = 0; j < tamanhoBalde; j++) {",
-            "42.                 Button btn = bucketsDados[i][j];",
-            "43.                 double novoY = 330 + (j * 45);",
-            "44.                 moverBotao(btn, btn.getLayoutX(), novoY);",
-            "45.             }",
-            "46.             Thread.sleep(500);",
-            "47.         }",
-            "48.     }",
-            "49. ",
-            "50.     Thread.sleep(800);",
-            "51. ",
-            "52.     // Aqui faco o gather (coleta de volta os numeros)",
-            "53.     int indexAtualVetor = 0;",
-            "54. ",
-            "55.     for (int i = 0; i < 10; i++) {",
-            "56.         int tamanhoBalde = qtdNoBalde[i];",
-            "57. ",
-            "58.         for (int j = 0; j < tamanhoBalde; j++) {",
-            "59.             Button btn = bucketsDados[i][j];",
-            "60.             double destinoX = 20 + (indexAtualVetor * 65);",
-            "61.             double destinoY = 100;",
-            "62. ",
-            "63.             Platform.runLater(() -> btn.setStyle(\"-fx-base: #2ecc71; -fx-text-fill: white;\"));",
+            "35.             for (int k = 0; k < tamanhoBalde - 1; k++) {",
+            "36.                 for (int m = 0; m < tamanhoBalde - 1 - k; m++) {",
+            "37.                     int v1 = Integer.parseInt(bucketsDados[i][m].getText());",
+            "38.                     int v2 = Integer.parseInt(bucketsDados[i][m + 1].getText());",
+            "39. ",
+            "40.                     if (v1 > v2) {",
+            "41.                         Button temp = bucketsDados[i][m];",
+            "42.                         bucketsDados[i][m] = bucketsDados[i][m + 1];",
+            "43.                         bucketsDados[i][m + 1] = temp;",
+            "44.                     }",
+            "45.                 }",
+            "46.             }",
+            "47. ",
+            "48.             for (int j = 0; j < tamanhoBalde; j++) {",
+            "49.                 Button btn = bucketsDados[i][j];",
+            "50.                 double novoY = 330 + (j * 45);",
+            "51.                 moverBotao(btn, btn.getLayoutX(), novoY);",
+            "52.             }",
+            "53.             Thread.sleep(500);",
+            "54.         }",
+            "55.     }",
+            "56. ",
+            "57.     Thread.sleep(800);",
+            "58. ",
+            "59.     // Aqui faco o gather, onde coleta de volta os numeros",
+            "60.     int indexAtualVetor = 0;",
+            "61. ",
+            "62.     for (int i = 0; i < 10; i++) {",
+            "63.         int tamanhoBalde = qtdNoBalde[i];",
             "64. ",
-            "65.             moverBotao(btn, destinoX, destinoY);",
-            "66. ",
-            "67.             vet[indexAtualVetor] = btn;",
-            "68.             indexAtualVetor++;",
+            "65.         for (int j = 0; j < tamanhoBalde; j++) {",
+            "66.             Button btn = bucketsDados[i][j];",
+            "67.             double destinoX = 20 + (indexAtualVetor * 65);",
+            "68.             double destinoY = 100;",
             "69. ",
-            "70.             Thread.sleep(250);",
-            "71.         }",
-            "72.     }",
+            "70.             Platform.runLater(() -> btn.setStyle(\"-fx-base: #2ecc71; -fx-text-fill: white;\"));",
+            "71. ",
+            "72.             moverBotao(btn, destinoX, destinoY);",
             "73. ",
-            "74.     Platform.runLater(() -> botao_inicio.setDisable(false));",
-            "75. }"
+            "74.             vet[indexAtualVetor] = btn;",
+            "75.             indexAtualVetor++;",
+            "76. ",
+            "77.             Thread.sleep(250);",
+            "78.         }",
+            "79.     }",
+            "80. ",
+            "81.     Platform.runLater(() -> botao_inicio.setDisable(false));",
+            "82. }"
     };
 
     @Override
@@ -203,9 +210,7 @@ public class Principal extends Application {
 
         destacarLinhaCodigo(3);
         Button[][] bucketsDados = new Button[10][qtdeElem];
-        int[] qtdNoBalde = new int[10]; // Controla quantos itens existem em cada balde
-
-        destacarLinhaCodigo(4);
+        int[] qtdNoBalde = new int[10];
 
         // Distribuir nos baldes os elementos do vetor
         for (int i = 0; i < qtdeElem; i++) {
@@ -217,11 +222,10 @@ public class Principal extends Application {
             destacarLinhaCodigo(13); // Adicionando o elemento ao balde correto
             int posicaoInsercao = qtdNoBalde[indexBalde];
             bucketsDados[indexBalde][posicaoInsercao] = btn;
-            qtdNoBalde[indexBalde]++; // Incrementa a quantidade neste balde
+            qtdNoBalde[indexBalde]++;
 
             destacarLinhaCodigo(15);
 
-            // Faz os cálculos para mover em X,Y os elementos em seus respectivos baldes
             double destinoX = 20 + (indexBalde * 75) + 8;
             double destinoY = 330 + (posicaoInsercao * 45);
 
@@ -239,50 +243,58 @@ public class Principal extends Application {
             int tamanhoBalde = qtdNoBalde[i];
 
             if(tamanhoBalde > 1) {
-                destacarLinhaCodigo(36); // Lógica de ordenação
-                java.util.Arrays.sort(bucketsDados[i], 0, tamanhoBalde, (b1, b2) -> {
-                    int v1 = Integer.parseInt(b1.getText());
-                    int v2 = Integer.parseInt(b2.getText());
-                    return Integer.compare(v1, v2);
-                });
 
-                destacarLinhaCodigo(42);
+                for (int k = 0; k < tamanhoBalde - 1; k++) {
+                    for (int m = 0; m < tamanhoBalde - 1 - k; m++) {
+                        int v1 = Integer.parseInt(bucketsDados[i][m].getText());
+                        int v2 = Integer.parseInt(bucketsDados[i][m + 1].getText());
+
+                        if (v1 > v2) {
+                            // Troca os botões de posição na matriz
+                            Button temp = bucketsDados[i][m];
+                            bucketsDados[i][m] = bucketsDados[i][m + 1];
+                            bucketsDados[i][m + 1] = temp;
+                        }
+                    }
+                }
+
+                destacarLinhaCodigo(48);
                 for (int j = 0; j < tamanhoBalde; j++) {
                     Button btn = bucketsDados[i][j];
                     double novoY = 330 + (j * 45);
 
-                    destacarLinhaCodigo(45); // Movendo o botão na tela
+                    destacarLinhaCodigo(51); // Movendo o botão na tela
                     moverBotao(btn, btn.getLayoutX(), novoY);
                 }
                 Thread.sleep(500);
             }
         }
 
-        destacarLinhaCodigo(51);
+        destacarLinhaCodigo(57);
         Thread.sleep(800);
 
         // Coleta de volta os números do vetor
-        destacarLinhaCodigo(54);
+        destacarLinhaCodigo(60);
         int indexAtualVetor = 0;
 
         for (int i = 0; i < 10; i++) {
-            destacarLinhaCodigo(56); // For externo percorrendo os 10 baldes
+            destacarLinhaCodigo(62);
             int tamanhoBalde = qtdNoBalde[i];
 
             for (int j = 0; j < tamanhoBalde; j++) {
-                destacarLinhaCodigo(57); // For interno tirando do balde
+                destacarLinhaCodigo(63);
                 Button btn = bucketsDados[i][j];
 
                 double destinoX = 20 + (indexAtualVetor * 65);
                 double destinoY = 100;
 
-                destacarLinhaCodigo(61);
+                destacarLinhaCodigo(67);
                 Platform.runLater(() -> btn.setStyle("-fx-base: #2ecc71; -fx-text-fill: white;"));
 
-                destacarLinhaCodigo(63); // Movendo de volta
+                destacarLinhaCodigo(69);
                 moverBotao(btn, destinoX, destinoY);
 
-                destacarLinhaCodigo(65); // Atualizando o vetor
+                destacarLinhaCodigo(71);
                 vet[indexAtualVetor] = btn;
                 indexAtualVetor++;
 
@@ -290,8 +302,9 @@ public class Principal extends Application {
             }
         }
 
-        destacarLinhaCodigo(72); // Fim da execução e liberação do botão
+        destacarLinhaCodigo(78);
         Platform.runLater(() -> botao_inicio.setDisable(false));
+
         Thread.sleep(1000);
         destacarLinhaCodigo(-1);
     }
